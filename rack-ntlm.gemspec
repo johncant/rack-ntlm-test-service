@@ -3,16 +3,14 @@ $:.push File.expand_path("../lib", __FILE__)
 require "rack-ntlm/version"
 
 Gem::Specification.new do |s|
-  s.name        = "rack-ntlm"
+  s.name        = "rack-ntlm-test-service"
   s.version     = Rack::Ntlm::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Luca Simone"]
+  s.authors     = ["Luca Simone", "John Cant"]
   s.email       = ["info@lucasimone.info"]
-  s.homepage    = "https://github.com/lukefx/rack-ntlm"
-  s.summary     = %q{Rack module for NTLM Auth}
-  s.description = %q{Rack module for NTLM Authentication against an ActiveDirectory or other LDAP Server}
-
-  s.rubyforge_project = "rack-ntlm"
+  s.homepage    = "https://github.com/johncant/rack-ntlm-test-service"
+  s.summary     = %q{Rack module for testing NTLM Authentication in an HTTP client}
+  s.description = %q{a Rack module for testing NTLM Authentication in an HTTP client}
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
@@ -20,6 +18,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency "rubyntlm"
-  s.add_dependency "net-ldap"
+
+  s.add_development_dependency "pry"
 
 end

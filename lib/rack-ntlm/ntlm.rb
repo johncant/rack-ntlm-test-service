@@ -1,31 +1,28 @@
-require 'net/ldap'
 require 'net/ntlm'
 
 module Rack
   class Ntlm
-    
+
     def initialize(app, config = {})
       @app = app
-      @config = {
-        :uri_pattern => /\//,
-        :port => 389,
-        :search_filter => "(sAMAccountName=%1)"
-      }.merge(config)
+      @config = config
     end
 
-    def auth(user)
-      ldap = Net::LDAP.new
-      ldap.host = @config[:host]
-      ldap.port = @config[:port]
-      ldap.base = @config[:base]
-      ldap.auth @config[:auth][:username], @config[:auth][:password] if @config[:auth]
-      !ldap.search(:filter => @config[:search_filter].gsub("%1", user)).empty?
-    rescue => e
-      false
+    def auth(username)
+      # Ignore the password. We should probably do something about this
+      begin
+        if @config[:auth]
+          username == @config[:auth][:username]
+        else
+          true
+        end
+      rescue => e
+        false
+      end
     end
 
     def call(env)
-      if env['PATH_INFO'] =~ @config[:uri_pattern] && env['HTTP_AUTHORIZATION'].blank?
+      if env['PATH_INFO'] =~ @config[:uri_pattern] && (env['HTTP_AUTHORIZATION'].nil? || env['HTTP_AUTHORIZATION'] == "")
         return [401, {'WWW-Authenticate' => "NTLM"}, []]
       end
 

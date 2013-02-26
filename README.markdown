@@ -1,44 +1,28 @@
-# Rack-ntlm
+# rack-ntlm-test-service
 
-Transparent authentication with NTLM.
+Test that your HTTP client supports NTLM authentication.
 
 ## Usage
 
-  In your Gemfile add:
+Rack middleware: <pre>Rack::Ntlm</pre>
 
-    gem 'rack-ntlm', :git => 'git://github.com/lukefx/rack-ntlm.git'
+Arguments:
 
-  Then add rack-ntlm to the middleware chain in config/application.rb (Rails 3)
+<pre>
+{   
+  :uri_pattern => /\/login/,
+  :auth => {
+    :username => 'user',
+    :password => 'secret'
+  }
+}
+</pre>
 
-    config.middleware.use "Rack::Ntlm", {
-      :uri_pattern => /\/login/                       # (default = /\//) (any URL)
-      :host => '<Active Directory hostname>',
-      :port => 389,                                   # default = 389
-      :base => 'Base namespace for LDAP search',
-      :search_filter => '(dn=%1)'                     # default = (sAMAccountName=%1)
-      :auth => {
-        :username => '<username to bind to LDAP>',
-        :password => '<password to bind to LDAP>'
-    }
 
-  # credits to dtsato to this awesome configuration and defaults
-  
-## How it works?
+# Credit to dtsato and lukefx for the original rack-ntlm gem on which this is based.
 
-NTLM is a transparent authentication system developed by Microsoft, it needs that your webserver use keepalive because the handshake consists in 6 steps all with the same connection.
+<h1>Temporary word of caution</h1>
 
-  1: C  --> S   GET ...
+<p>until my changes have been merged and pushed, you need to use the 'rubyntlm' gem from my github.</p>
 
-  2: C <--  S   401 Unauthorized
-              WWW-Authenticate: NTLM
-
-  3: C  --> S   GET ...
-              Authorization: NTLM <base64-encoded type-1-message>
-
-  4: C <--  S   401 Unauthorized
-              WWW-Authenticate: NTLM <base64-encoded type-2-message>
-
-  5: C  --> S   GET ...
-              Authorization: NTLM <base64-encoded type-3-message>
-
-  6: C <--  S   200 Ok
+<a href="https://github.com/johncant/rubyntlm">https://github.com/johncant/rubyntlm</a>
